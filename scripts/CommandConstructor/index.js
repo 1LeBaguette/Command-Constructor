@@ -22,7 +22,7 @@ class CommandConstructor {
                 command.callback(data, parameters, arguments, selector);
             } catch (error) {
                 console.warn(`[DEBUG - ERRPR] ${error}`);
-            }
+            };
         });
     };
     construct(data) {
