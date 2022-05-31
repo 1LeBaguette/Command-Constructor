@@ -1,5 +1,5 @@
 import { prefix } from './config/prefix';
-import { world, BeforeChatEvent, EntityQueryOptions } from 'mojang-minecraft';
+import { world, BeforeChatEvent, EntityQueryOptions, Player } from 'mojang-minecraft';
 class CommandConstructor {
     constructor() {
         this.registeredCommands = [];
@@ -19,9 +19,9 @@ class CommandConstructor {
                 sel.nameTag == message.match(/(?<=\@).?/)?.[0].replace(/\"/g, '');
             });
             try {
-                command.callback()
+                command.callback(data, parameters, arguments, selector);
             } catch (error) {
-                
+                console.warn(`[DEBUG - ERRPR] ${error}`);
             }
         });
     };
@@ -43,7 +43,7 @@ class CustomCommand extends CommandConstructor {
      * @param {String} name 
      * @param {String} description 
      * @param {String} use 
-     * @param {(data: BeforeChatEvent)} callback 
+     * @param {(data: BeforeChatEvent, parameters: String, arguments: String[], selector: Player)} callback 
      * @param {Boolean} staff 
      */
     constructor(name, description, use, callback, staff = false) {
