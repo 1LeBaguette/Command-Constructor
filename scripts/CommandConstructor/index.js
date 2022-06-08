@@ -15,13 +15,13 @@ class CommandConstructor {
                 };
             };
             const arguments = message.match(/(?<=\").*?(?=\")/g);
-            const selector = Array.from(world.getPlayers()).find(sel => {
+            const target = Array.from(world.getPlayers()).find(sel => {
                 sel.nameTag == message.match(/(?<=\@).?/)?.[0].replace(/\"/g, '');
             });
             try {
-                command.callback(data, parameters, arguments, selector);
+                command.callback(data, parameters, arguments, target);
             } catch (error) {
-                console.warn(`[DEBUG - ERRPR] ${error}`);
+                console.warn(`[DEBUG - ERROR] ${error}`);
             };
         });
     };
