@@ -14,12 +14,12 @@ class CommandConstructor {
                     console.warn(`[DEBUG - ERROR] ${error}`)
                 };
             };
-            const arguments = message.match(/(?<=\").*?(?=\")/g);
+            const args = message.match(/(?<=\").*?(?=\")/g);
             const target = Array.from(world.getPlayers()).find(sel => {
                 sel.nameTag == message.match(/(?<=\@).?/)?.[0].replace(/\"/g, '');
             });
             try {
-                command.callback(data, parameters, arguments, target);
+                command.callback(data, parameters, args, target);
             } catch (error) {
                 console.warn(`[DEBUG - ERROR] ${error}`);
             };
@@ -43,10 +43,10 @@ export class CustomCommand extends CommandConstructor {
      * @param {String} name 
      * @param {String} description 
      * @param {String} use 
-     * @param {(data: BeforeChatEvent, parameters: String, arguments: String[], selector: Player)} callback 
+     * @param {(data: BeforeChatEvent, parameters: String, args: String[], selector: Player)} callback 
      * @param {Boolean} staff 
      */
-    constructor(name, description, use, callback, staff = false) {
+    register(name, description, use, callback, staff = false) {
         const cmd = {
             "name": name,
             "description": description,
@@ -57,4 +57,4 @@ export class CustomCommand extends CommandConstructor {
         this.construct(cmd);
     };
 };
-new CustomCommand()
+let command = new CustomCommand();
