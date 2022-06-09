@@ -37,7 +37,7 @@ class CommandConstructor {
         );
     };
 };
-class CustomCommand extends CommandConstructor {
+export class CustomCommand extends CommandConstructor {
     /**
      * 
      * @param {String} name 
@@ -57,3 +57,4 @@ class CustomCommand extends CommandConstructor {
         this.construct(cmd);
     };
 };
+new CustomCommand()
