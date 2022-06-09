@@ -57,4 +57,4 @@ export class CustomCommand extends CommandConstructor {
         this.construct(cmd);
     };
 };
-let command = new CustomCommand();
+export const command = new CustomCommand();
