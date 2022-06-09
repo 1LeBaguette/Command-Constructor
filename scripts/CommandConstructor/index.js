@@ -57,4 +57,10 @@ export class CustomCommand extends CommandConstructor {
         this.construct(cmd);
     };
 };
-export const command = new CustomCommand();
+export const command = new CustomCommand(), run = (cmd, dim = 'overworld') => {
+    try {
+        return { error: false, ...world.getDimension(dim).runCommand(cmd) };
+    } catch (error) {
+        return { error: true, ...error };
+    };
+};
