@@ -39,12 +39,12 @@ class CommandConstructor {
 };
 export class CustomCommand extends CommandConstructor {
     /**
-     * 
-     * @param {String} name 
-     * @param {String} description 
-     * @param {String} use 
-     * @param {(data: BeforeChatEvent, parameters: String, args: String[], selector: Player)} callback 
-     * @param {Boolean} staff 
+     * Register a new custom command
+     * @param {String} name Command name
+     * @param {String} description Command description
+     * @param {String} use Command use
+     * @param {(data: BeforeChatEvent, parameters: String, args: String[], selector: Player)} callback Command callback (internal code)
+     * @param {Boolean} staff If the player need to be an staff to execute the command  
      */
     register(name, description, use, callback, staff = false) {
         const cmd = {
