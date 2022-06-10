@@ -1,7 +1,10 @@
 import { prefix } from './config/prefix';
 import { world, BeforeChatEvent, EntityQueryOptions, Player } from 'mojang-minecraft';
+/* Events class */
 
-// Custom command wrapper
+class events {};
+
+/* Custom command wrapper class */
 
 class CommandConstructor {
     constructor() {
@@ -41,7 +44,7 @@ class CommandConstructor {
     };
 };
 
-export class Command extends CommandConstructor {
+class Command extends CommandConstructor {
     /**
      * Register a new custom command
      * @param {String} name Command name
@@ -50,7 +53,7 @@ export class Command extends CommandConstructor {
      * @param {(data: BeforeChatEvent, parameters: String, args: String[], selector: Player)} callback Command callback 
      * @param {Boolean} staff If the command requires special staff permission
      */
-    constructor(name, description, use, callback, staff = false) {
+    register(name, description, use, callback, staff = false) {
         const command = {
             "name": name,
             "description": description,
@@ -62,7 +65,7 @@ export class Command extends CommandConstructor {
     };
 };
 
-// Database
+/* Database class */
 
 class db {
     get(id) {
@@ -76,7 +79,22 @@ class db {
     };
 };
 
-// Function definitions
+/* Daylight class */
+
+class Daylight {
+    daytime;
+    day;
+    add() {};
+    remove() {};
+    isNight() {};
+    skip() {};
+};
+
+/* Weather class */
+
+class weather {};
+
+/* Function definitions */
 
 const broadcast = (message, name = null) => {
     if (!name) {
@@ -114,12 +132,31 @@ const runCommand = (command, dimension = 'overworld') => {
     };
 };
 
-// Class variable definitions
+/**
+ * Executes a vanilla minecraft command (if specified, the command will be executed in the given dimension context) 
+ * @param {String} command Command to execute (Only vanilla commands)
+ * @param {String} dimension Optional dimension to run the command (By default overworld)
+ * @returns 
+ */
+const getPlayers = () => {
+    try {
+        return {
+            ...world.getPlayers()
+        };
+    } catch (error) {
+        return {
+            "error": false,
+            ...error
+        };
+    };
+};
+
+/* Class variable definitions */
 
 const command = new Command();
 
 const database = new db();
 
-// Export 
+/* Export */
 
-export { broadcast, sendMessage, runCommand, database, command };
+export { broadcast, sendMessage, runCommand, getPlayers, setWeather, toggleDownFall, changeGameRule, tpT, database, command };
