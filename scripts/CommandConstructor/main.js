@@ -1,5 +1,8 @@
 import { prefix } from './config/prefix';
 import { world, BeforeChatEvent, EntityQueryOptions, Player } from 'mojang-minecraft';
+
+// Custom command wrapper
+
 class CommandConstructor {
     constructor() {
         this.registeredCommands = [];
@@ -14,12 +17,12 @@ class CommandConstructor {
                     console.warn(`[DEBUG - ERROR] ${error}`)
                 };
             };
-            const arguments = message.match(/(?<=\").*?(?=\")/g);
+            const args = message.match(/(?<=\").*?(?=\")/g);
             const target = Array.from(world.getPlayers()).find(sel => {
                 sel.nameTag == message.match(/(?<=\@).?/)?.[0].replace(/\"/g, '');
             });
             try {
-                command.callback(data, parameters, arguments, target);
+                command.callback(data, parameters, args, target);
             } catch (error) {
                 console.warn(`[DEBUG - ERROR] ${error}`);
             };
@@ -37,24 +40,86 @@ class CommandConstructor {
         );
     };
 };
-export class CustomCommand extends CommandConstructor {
+
+export class Command extends CommandConstructor {
     /**
-     * 
-     * @param {String} name 
-     * @param {String} description 
-     * @param {String} use 
-     * @param {(data: BeforeChatEvent, parameters: String, arguments: String[], selector: Player)} callback 
-     * @param {Boolean} staff 
+     * Register a new custom command
+     * @param {String} name Command name
+     * @param {String} description Command description
+     * @param {String} use Commandu use
+     * @param {(data: BeforeChatEvent, parameters: String, args: String[], selector: Player)} callback Command callback 
+     * @param {Boolean} staff If the command requires special staff permission
      */
     constructor(name, description, use, callback, staff = false) {
-        const cmd = {
+        const command = {
             "name": name,
             "description": description,
             "use": use,
             "callback": callback,
             "staff": staff
         };
-        this.construct(cmd);
+        this.construct(command);
     };
 };
-new CustomCommand()
+
+// Database
+
+class db {
+    get(id) {
+        return world.getDynamicProperty(id)
+    };
+    set(id, value) {
+        return world.setDynamicProperty(id, value);
+    }
+    delete(id) {
+        return world.removeDynamicProperty(id);
+    };
+};
+
+// Function definitions
+
+const broadcast = (message, name = null) => {
+    if (!name) {
+        return runCommand(`tellraw @a {"rawtext":[{"text":"§7[§r${name}§7]"},{"text":"${message}"}]}`);
+    } else {
+        return runCommand(`tellraw @a {"rawtext":[{"text":"${message}"}]}`);
+    };
+};
+
+const sendMessage = (message, name = null) => {
+    if (!name) {
+        return runCommand(`tellraw @a {"rawtext":[{"text":"§7[§r${name}§7]"},{"text":"${message}"}]}`);
+    } else {
+        return runCommand(`tellraw @a {"rawtext":[{"text":"${message}"}]}`);
+    };
+};
+
+/**
+ * Run a command, (If specified, the command will be executed in the given dimension context) 
+ * @param {String} command Command to execute (Only vanilla commands)
+ * @param {String} dimension Optional dimension to run the command (By default overworld)
+ * @returns 
+ */
+const runCommand = (command, dimension = 'overworld') => {
+    try {
+        return {
+            "error": false,
+            ...world.getDimension(dimension).runCommand(command)
+        };
+    } catch (error) {
+        return {
+            "error": false,
+            ...error
+        };
+    };
+};
+
+// Class variable definitions
+
+const command = new Command();
+
+const database = new db();
+
+// Export 
+
+export { broadcast, sendMessage, runCommand, database, command };
